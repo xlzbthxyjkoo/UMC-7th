@@ -1,0 +1,129 @@
+/*화면에 꽉 채우기 위해*/
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #e0ebff;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.todo-wrapper {
+  justify-content: center;
+  margin: 3rem;
+  min-width: 600px;
+}
+
+.todo-title {
+  text-align: center;
+  padding: 3rem;
+  font-size: 3rem;
+  font-family: "Ubuntu", sans-serif;
+}
+
+.todo-box {
+  background-color: white;
+}
+
+.todo-input-box {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: "Sunflower", "Ubuntu", sans-serif;
+
+  height: 3rem;
+  border: 2px solid black;
+}
+
+button {
+  background-color: transparent; /*버튼 배경 투명으로 바꾸고*/
+  border: 0;
+}
+
+.todo-input {
+  width: 100%;
+  margin-left: 10px;
+  border: 0;
+  outline: none;
+}
+
+.list-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem; /*간격*/
+
+  text-align: center;
+}
+
+.todo-list {
+  flex: 1; /*두 리스트가 같은 비율로 공간 차지*/
+  list-style: none; /*리스트의 기본 불릿 제거*/
+  padding: 0;
+  margin: 0;
+}
+
+.complete-list {
+  flex: 1; /*두 리스트가 같은 비율로 공간 차지*/
+  list-style: none; /*리스트의 기본 불릿 제거*/
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+
+  height: 3rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.all-button {
+  margin: 1rem;
+}
+
+.checkbox {
+  margin: 1rem 0.7rem;
+
+  min-width: none;
+  min-height: none;
+  text-align: center;
+
+  cursor: pointer;
+}
+
+.todo {
+  font-family: "Sunflower", "Ubuntu", sans-serif;
+  text-align: center;
+  margin: 1rem;
+}
+
+.todo-item.checked .todo {
+  font-style: italic;
+  text-decoration: line-through;
+  color: lightgray;
+}
+
+/*del 버튼 위에 마우스 올렸을 때 투명도*/
+.deleteBTN:hover {
+  opacity: 0.3;
+}
+
+/*del 버튼 위에 마우스 올렸을 때 마우스 모양 pointer로 바뀜*/
+.deleteBTN {
+  cursor: pointer;
+  width: 2rem;
+}
+
+.left-items {
+  padding: 0rem 0.5rem;
+}
