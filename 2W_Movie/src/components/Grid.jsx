@@ -1,19 +1,18 @@
 import React from "react";
 import { MOVIES } from "../mocks/movies";
-import "../App.css"; // CSS 파일 import
+import "../App.css";
 
 const Grid = () => {
   return (
-    <div className="container mx-auto px-4">
-      <div className="grid-container">
+    <div>
+      <div className="container">
         {MOVIES.results.map((movie) => (
-          <div key={movie.id} className="movie-item">
+          <div key={movie.id} className="item">
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              className="movie-poster"
+              className="poster"
             />
-            <div className="movie-overlay"></div>
+            <div className="overlay"></div>
           </div>
         ))}
       </div>
