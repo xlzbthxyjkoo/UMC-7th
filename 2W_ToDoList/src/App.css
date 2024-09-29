@@ -1,42 +1,105 @@
-#root {
-  max-width: 1280px;
+/* 전체 페이지 스타일 */
+body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 전체 앱 컨테이너 스타일 */
+.app {
+  max-width: 600px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 20px;
+  border-radius: 8px; /* 모서리 둥글게 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 할 일 입력 폼 스타일 */
+.todo-form {
+  display: flex;
+  margin-bottom: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 입력 필드 스타일 */
+.todo-input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* 버튼 기본 스타일 */
+.btn {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.card {
-  padding: 2em;
+/* 할 일 추가 버튼 스타일 */
+.add-btn {
+  background-color: #a5b68d;
+  margin-left: 10px;
 }
 
-.read-the-docs {
-  color: #888;
+/* 할 일 항목 컨테이너 스타일 */
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+/* 할 일 정보 및 수정 영역 스타일 */
+.todo-info,
+.todo-edit {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* 할 일 ID 스타일 */
+.todo-id {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+/* 할 일 내용 스타일 */
+.todo-task {
+  flex-grow: 1;
+}
+
+/* 할 일 수정 입력 필드 스타일 */
+.edit-input {
+  flex-grow: 1;
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-btn {
+  background-color: #a04747;
+  margin-right: 5px;
+}
+
+/* 수정 버튼 스타일 */
+.edit-btn {
+  background-color: #16325b;
+}
+
+/* 수정 완료 버튼 스타일 */
+.complete-btn {
+  background-color: #6a9c89;
 }

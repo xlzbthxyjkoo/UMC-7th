@@ -1,91 +1,77 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
+import Button from "./components/Button";
+import Input from "./components/Input";
+import TodoItem from "./components/Items";
 
 function App() {
-  // 랜더링 방지
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
+  // 상태 관리
   const [todos, setTodos] = useState([
     { id: 1, task: "투두 만들어보기" },
     { id: 2, task: "예지" },
   ]);
+  const [text, setText] = useState(""); // 새 할 일 입력 텍스트
+  const [editingId, setEditingId] = useState(""); // 현재 수정 중인 할 일의 id
+  const [editText, setEditText] = useState(""); // 수정 중인 텍스트
 
-  const [text, setText] = useState("");
+  // 폼 제출 방지
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
 
-  const [editingId, setEditingId] = useState("");
-
-  const [editText, setEditText] = useState("");
-
-  // 추가하기
+  // 새 할 일 추가
   const addTodo = () => {
     if (text.trim().length === 0) {
       alert("내용을 입력하세요");
       return;
     }
     setTodos((prev) => [
-      ...prev, //값 복사
-      { id: Math.floor(Math.random() * 100) + 2, task: text }, // "tak"을 "task"로 수정
+      ...prev,
+      { id: Math.floor(Math.random() * 100) + 2, task: text },
     ]);
-    setText("");
+    setText(""); // 입력 필드 초기화
   };
 
-  //삭제하기
+  // 할 일 삭제
   const deleteTodo = (id) => {
     setTodos((prev) => prev.filter((item) => item.id !== id));
   };
 
-  //수정하기
+  // 할 일 수정
   const updateTodo = (id, text) => {
     setTodos((prev) =>
       prev.map((item) => (item.id === id ? { ...item, task: text } : item))
     );
-    setEditingId("");
+    setEditingId(""); // 수정 모드 종료
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+    <div className="app">
+      <form className="todo-form" onSubmit={handleSubmit}>
+        <Input
+          className="todo-input"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button onClick={addTodo} type="submit">
+        <Button className="add-btn" onClick={addTodo} type="submit">
           할 일 등록
-        </button>
+        </Button>
       </form>
-      <div>
+      <div className="todo-list">
         {todos.map((todo) => (
-          <div style={{ display: "flex", gap: "20px" }}>
-            {editingId !== todo.id && (
-              <div key={todo.id} style={{ display: "flex", gap: "5px" }}>
-                <p>{todo.id}번</p>
-                <p>{todo.task}</p>
-              </div>
-            )}
-            {editingId === todo.id && (
-              <div key={todo.id} style={{ display: "flex", gap: "5px" }}>
-                <p>{todo.id}번</p>
-                <input
-                  defaultValue={todo.task}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-              </div>
-            )}
-            <button onClick={() => deleteTodo(todo.id)}>삭제</button>
-            {editingId === todo.id ? (
-              <button onClick={() => updateTodo(editingId, editText)}>
-                완료
-              </button>
-            ) : (
-              <button onClick={() => setEditingId(todo.id)}>수정</button>
-            )}
-          </div>
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onDelete={deleteTodo}
+            onEdit={setEditingId}
+            onUpdate={updateTodo}
+            editingId={editingId}
+            editText={editText}
+            setEditText={setEditText}
+          />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
