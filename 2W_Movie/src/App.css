@@ -1,0 +1,49 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 16px;
+  max-width: 1200px; /* 또는 원하는 최대 너비 */
+  width: 100%;
+  padding: 20px;
+}
+
+.movie-item {
+  position: relative;
+  width: 100%;
+  max-width: 100px; /* 원하는 이미지 최대 너비로 조정 */
+  height: auto;
+}
+
+.movie-poster {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.movie-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.movie-item:hover .movie-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
