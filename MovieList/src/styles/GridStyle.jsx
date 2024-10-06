@@ -2,36 +2,47 @@ import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+ body {
     margin: 0;
     padding: 0;
+    background-color: #121212;
+    color: white;
+    font-family: Arial, sans-serif;
   }
 `;
 
-// container를 styled.div로 변환
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 16px;
-  max-width: 1200px;
+  padding: 16px;
   width: 100%;
-  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
 `;
 
-// item을 styled.div로 변환
 export const Item = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+export const PosterContainer = styled.div`
   position: relative;
   width: 100%;
-  max-width: 110px;
   aspect-ratio: 2 / 3;
   overflow: hidden;
+  margin-bottom: 8px;
 `;
 
-// 포스터 이미지 스타일 적용
 export const Poster = styled.img`
   width: 100%;
   height: 100%;
@@ -40,7 +51,6 @@ export const Poster = styled.img`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-// overlay 스타일 적용
 export const Overlay = styled.div`
   position: absolute;
   top: 0;
@@ -48,13 +58,37 @@ export const Overlay = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 
-  ${Item}:hover & {
+  ${PosterContainer}:hover & {
     background-color: rgba(0, 0, 0, 0.7);
+  }
+`;
+
+export const MovieInfo = styled.div`
+  text-align: left;
+`;
+
+export const MovieTitle = styled.h3`
+  font-size: 0.8rem;
+  color: white;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (min-width: 768px) {
+    font-size: 0.9rem;
+  }
+`;
+
+export const MovieReleaseDate = styled.p`
+  font-size: 0.7rem;
+  color: #aaa;
+  margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: 0.8rem;
   }
 `;
