@@ -1,43 +1,43 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // useParams를 import
-import axios from "axios";
 import * as S from "../styles/GridStyle";
+import useCustomFetch from "../hooks/useCustomFetch";
+import { useLocation } from "react-router-dom";
 
 const Grid = () => {
-  const { category } = useParams(); // 카테고리 파라미터 가져오기
-  const [movies, setMovies] = useState([]);
+  const location = useLocation();
 
-  useEffect(() => {
-    const getMovies = async () => {
-      let url = "";
-
-      switch (category) {
-        case "now-playing":
-          url = `https://api.themoviedb.org/3/movie/now_playing?language=ko-KR&page=1`;
-          break;
-        case "popular":
-          url = `https://api.themoviedb.org/3/movie/popular?language=ko-KR&page=1`;
-          break;
-        case "top-rated":
-          url = `https://api.themoviedb.org/3/movie/top_rated?language=ko-KR&page=1`;
-          break;
-        case "up-coming":
-          url = `https://api.themoviedb.org/3/movie/upcoming?language=ko-KR&page=1`;
-          break;
-        default:
-          url = `https://api.themoviedb.org/3/movie/popular?language=ko-KR&page=1`;
-      }
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_APP_API_KEY}`, // 여기에 API 키 입력
-        },
-      });
-
-      setMovies(response.data.results); // 데이터 설정
+  // 현재 경로에 따라 적절한 API 엔드포인트를 결정
+  const getApiEndpoint = () => {
+    const path = location.pathname.split("/").pop();
+    const endpoints = {
+      "now-playing": "/movie/now_playing",
+      popular: "/movie/popular",
+      "top-rated": "/movie/top_rated",
+      "up-coming": "/movie/upcoming",
     };
+    return endpoints[path] || "/movie/now_playing";
+  };
 
-    getMovies();
-  }, [category]); // category 변경될 때마다 데이터 재요청
+  const {
+    data: movies,
+    isLoading,
+    isError,
+  } = useCustomFetch(`${getApiEndpoint()}?language=ko-KR&page=1`);
+
+  if (isLoading) {
+    return (
+      <div>
+        <h1 style={{ color: "white" }}>로딩 중 입니다...</h1>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div>
+        <h1 style={{ color: "white" }}>Error</h1>
+      </div>
+    );
+  }
 
   return (
     <S.Container>
