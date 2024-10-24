@@ -1,6 +1,7 @@
-|주차|내용|폴더|
+![image](https://github.com/user-attachments/assets/a7f2a9d6-fe93-4a30-a2dc-516d5a4dfb5f)|주차|내용|폴더|
 |:--:|:--:|:--:|
 |1주차|Todo List (HTML, CSS, JS)|1W_ToDoList|
 |2주차|ToDoList 만들며 useState 익히기|2W_ToDoList|
 |2주차|영화 컴포넌트 만들기|MovieList|
 |3주차|영화 사이트 제작|MovieList|
+|4주차|영화 상세페이지|MovieList|
