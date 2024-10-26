@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import * as S from "../styles/CategoryStyle";
 
 const Movies = () => {
@@ -41,7 +41,7 @@ const Movies = () => {
 
   const handleCategorySelect = (link) => {
     setIsCategorySelected(true);
-    navigate(link);
+    navigate(`category/${link}`);
   };
 
   return (
