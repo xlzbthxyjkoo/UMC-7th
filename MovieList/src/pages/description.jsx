@@ -37,20 +37,6 @@ const Description = () => {
     return `${hours}시간 ${remainingMinutes}분`;
   };
 
-  //rating이 undefined나 null일 때만 "평점 없음" 반환
-  //0을 포함한 다른 숫자들은 소수점 첫째자리까지 표시
-  const formatRating = (rating) => {
-    if (!rating && rating !== 0) return "평점 없음";
-    //소수점 첫째자리까지 표시
-    return rating.toFixed(1);
-  };
-
-  //개봉일자를 연도만 표시하기 위해
-  const getYear = (dateString) => {
-    if (!dateString) return "개봉년도 없음";
-    return new Date(dateString).getFullYear();
-  };
-
   return (
     <S.DetailContainer>
       <S.ContentWrapper>
