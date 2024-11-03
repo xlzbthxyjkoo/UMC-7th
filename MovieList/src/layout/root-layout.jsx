@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import * as S from "../styles/LayoutStyle";
+import LoginPage from "../pages/login";
 
 const RootLayout = () => {
   return (

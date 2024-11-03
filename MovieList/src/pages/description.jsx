@@ -70,6 +70,7 @@ const Description = () => {
           <S.CreditsSection>
             <S.CreditsTitle>감독/출연</S.CreditsTitle>
             <S.CastGrid>
+              {/* 상위 10명의 출연진 정보만 잘라서 보여줌 */}
               {credits.cast?.slice(0, 10).map((person) => (
                 <S.CastCard key={person.id}>
                   {person.profile_path && (
