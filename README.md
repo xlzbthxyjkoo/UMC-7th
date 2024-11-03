@@ -5,3 +5,4 @@
 |2주차|영화 컴포넌트 만들기|MovieList|
 |3주차|영화 사이트 제작|MovieList|
 |4주차|영화 상세페이지|MovieList|
+|5주차|로그인, 회원가입|MovieList|
