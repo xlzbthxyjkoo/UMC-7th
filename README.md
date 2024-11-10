@@ -6,3 +6,4 @@
 |3주차|영화 사이트 제작|MovieList|
 |4주차|영화 상세페이지|MovieList|
 |5주차|로그인, 회원가입|MovieList|
+|6주차|Context API, |2W_ToDoList, MovieList|
