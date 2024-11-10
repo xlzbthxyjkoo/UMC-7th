@@ -10,17 +10,22 @@ const LoginPage = () => {
   };
 
   const login = useForm(initialValues, validateLogin);
+
+  //유효성 상태 관리
   const [isValid, setIsValid] = useState(false);
 
+  //폼 입력값이나 에러 상태가 변경될 때마다 유효성 검사
   useEffect(() => {
     const isFormValid =
-      login.values.email &&
-      login.values.password &&
+      login.values.email && //이메일 필드 비어있나??
+      login.values.password && //비밀번호 필드 비어있나??
+      //모든필드 에러 없는지 확인
       Object.keys(login.errors).every((key) => !login.errors[key]);
 
     setIsValid(isFormValid);
-  }, [login.values, login.errors]);
+  }, [login.values, login.errors]); //values나 errors가 변경될 때마다 실행
 
+  //제출
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isValid) {

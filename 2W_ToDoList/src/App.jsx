@@ -1,50 +1,24 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./App.css";
 import Button from "./components/Button";
 import Input from "./components/Input";
 import TodoItem from "./components/Items";
+import { TodoContext } from "./context/TodoContext";
 
 function App() {
-  // 상태 관리
-  const [todos, setTodos] = useState([
-    { id: 1, task: "투두 만들어보기" },
-    { id: 2, task: "예지" },
-  ]);
-  const [text, setText] = useState(""); // 새 할 일 입력 텍스트
-  const [editingId, setEditingId] = useState(""); // 현재 수정 중인 할 일의 id
-  const [editText, setEditText] = useState(""); // 수정 중인 텍스트
-
-  // 폼 제출 방지
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
-  // 새 할 일 추가
-  const addTodo = () => {
-    if (text.trim().length === 0) {
-      alert("내용을 입력하세요");
-      return;
-    }
-    setTodos((prev) => [
-      ...prev,
-      { id: Math.floor(Math.random() * 100) + 2, task: text },
-    ]);
-    setText(""); // 입력 필드 초기화
-  };
-
-  // 할 일 삭제
-  const deleteTodo = (id) => {
-    setTodos((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  // 할 일 수정
-  const updateTodo = (id, text) => {
-    setTodos((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, task: text } : item))
-    );
-    setEditingId(""); // 수정 모드 종료
-  };
-
+  const {
+    todos,
+    text,
+    setText,
+    editText,
+    setEditText,
+    editingId,
+    setEditingId,
+    handleSubmit,
+    addTodo,
+    deleteTodo,
+    updateTodo,
+  } = useContext(TodoContext);
   return (
     <div className="app">
       <form className="todo-form" onSubmit={handleSubmit}>
