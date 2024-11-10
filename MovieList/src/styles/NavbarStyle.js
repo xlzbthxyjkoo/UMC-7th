@@ -34,3 +34,9 @@ export const StyledButton = styled(Link)`
     background-color: #cc0052;
   }
 `;
+
+export const UserInfo = styled.span`
+  margin-right: 1rem;
+  font-weight: 600;
+  color: #999;
+`;

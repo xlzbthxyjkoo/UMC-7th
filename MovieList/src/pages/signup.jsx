@@ -2,9 +2,11 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as S from "../styles/SignupStyle";
+import { useSignup } from "../hooks/useSignup";
 
 const SignupPage = () => {
-  // Yup validation schema
+  const { signup, isLoading, error } = useSignup();
+
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -19,31 +21,31 @@ const SignupPage = () => {
       .string()
       .oneOf([yup.ref("password"), null], "비밀번호가 일치하지 않습니다")
       .required("비밀번호 확인은 필수 입력사항입니다"),
-    name: yup
-      .string()
-      .min(2, "이름은 최소 2자 이상이어야 합니다")
-      .required("이름은 필수 입력사항입니다"),
-    nickname: yup
-      .string()
-      .min(2, "닉네임은 최소 2자 이상이어야 합니다")
-      .max(10, "닉네임은 최대 10자까지 가능합니다")
-      .required("닉네임은 필수 입력사항입니다"),
-    birthDate: yup
-      .date()
-      .max(new Date(), "생년월일이 현재 날짜보다 늦을 수 없습니다")
-      .required("생년월일은 필수 입력사항입니다"),
-    gender: yup
-      .string()
-      .oneOf(["male", "female", "other"], "성별을 선택해주세요")
-      .required("성별은 필수 선택사항입니다"),
-    phone: yup
-      .string()
-      .matches(
-        /^01[0-9]-\d{4}-\d{4}$/,
-        "올바른 전화번호 형식이 아닙니다 (01x-xxxx-xxxx)"
-      )
-      .required("전화번호는 필수 입력사항입니다"),
-    terms: yup.boolean().oneOf([true], "이용약관에 동의해주세요"),
+    // name: yup
+    //   .string()
+    //   .min(2, "이름은 최소 2자 이상이어야 합니다")
+    //   .required("이름은 필수 입력사항입니다"),
+    // nickname: yup
+    //   .string()
+    //   .min(2, "닉네임은 최소 2자 이상이어야 합니다")
+    //   .max(10, "닉네임은 최대 10자까지 가능합니다")
+    //   .required("닉네임은 필수 입력사항입니다"),
+    // birthDate: yup
+    //   .date()
+    //   .max(new Date(), "생년월일이 현재 날짜보다 늦을 수 없습니다")
+    //   .required("생년월일은 필수 입력사항입니다"),
+    // gender: yup
+    //   .string()
+    //   .oneOf(["male", "female", "other"], "성별을 선택해주세요")
+    //   .required("성별은 필수 선택사항입니다"),
+    // phone: yup
+    //   .string()
+    //   .matches(
+    //     /^01[0-9]-\d{4}-\d{4}$/,
+    //     "올바른 전화번호 형식이 아닙니다 (01x-xxxx-xxxx)"
+    //   )
+    //   .required("전화번호는 필수 입력사항입니다"),
+    // terms: yup.boolean().oneOf([true], "이용약관에 동의해주세요"),
   });
 
   const {
@@ -55,8 +57,12 @@ const SignupPage = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (data) => {
-    console.log("제출된 데이터:", data);
+  const onSubmit = async (data) => {
+    await signup({
+      email: data.email,
+      password: data.password,
+      passwordCheck: data.passwordCheck,
+    });
   };
 
   return (
@@ -98,7 +104,7 @@ const SignupPage = () => {
           )}
         </S.InputWrapper>
 
-        <S.InputWrapper>
+        {/* <S.InputWrapper>
           <S.Input
             type="text"
             placeholder="이름을 입력해주세요"
@@ -163,10 +169,14 @@ const SignupPage = () => {
           {errors.terms && (
             <S.ErrorMessage>{errors.terms.message}</S.ErrorMessage>
           )}
-        </S.CheckboxWrapper>
+        </S.CheckboxWrapper> */}
 
-        <S.SubmitButton type="submit" disabled={!isValid} isValid={isValid}>
-          가입하기
+        <S.SubmitButton
+          type="submit"
+          disabled={!isValid || isLoading}
+          isValid={isValid}
+        >
+          {isLoading ? "처리중..." : "가입하기"}
         </S.SubmitButton>
       </S.Form>
     </S.FormContainer>

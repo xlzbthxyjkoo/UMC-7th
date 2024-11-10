@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Grid from "./components/Grid";
 import { GlobalStyle } from "./styles/GridStyle.js";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 import RootLayout from "./layout/root-layout.jsx";
 import NotFound from "./pages/not-found.jsx";
@@ -46,10 +47,10 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <>
+    <AuthProvider>
       <GlobalStyle />
       <RouterProvider router={router} />
-    </>
+    </AuthProvider>
   );
 };
 
