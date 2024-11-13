@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
@@ -13,20 +13,12 @@ export const GlobalStyle = createGlobalStyle`
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 16px;
-  padding: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1600px; // 더 넓게 조정
   margin: 0 auto;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
+  padding: 1rem;
 `;
 
 export const Item = styled.div`
@@ -91,4 +83,36 @@ export const MovieReleaseDate = styled.p`
   @media (min-width: 768px) {
     font-size: 0.8rem;
   }
+`;
+
+// 스켈레톤 UI 애니메이션
+const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
+
+export const SkeletonPoster = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.5s infinite;
+  border-radius: 4px;
+`;
+
+export const SkeletonText = styled.div`
+  width: ${(props) => props.width || "100%"};
+  height: 20px;
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
 `;

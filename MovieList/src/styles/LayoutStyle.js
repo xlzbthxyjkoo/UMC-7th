@@ -25,9 +25,10 @@ export const SidebarWrapper = styled.div`
 
 export const ContentArea = styled.div`
   flex: 1;
-  padding: 20px;
   background-color: #121212;
-  margin-left: 190px; // Sidebar의 너비만큼 여백 추가
+  margin-left: 190px; // Sidebar의 너비만큼 여백
+  padding: 0; // 패딩 제거 (SearchPage에서 관리)
+  min-height: calc(100vh - 60px); // Navbar 높이 만큼 빼기
 `;
 
 export const NavbarWrapper = styled.div`

@@ -2,35 +2,63 @@ import * as S from "../styles/GridStyle";
 import useCustomFetch from "../hooks/useCustomFetch";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Grid = () => {
+const Grid = ({ searchQuery }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  //카테고리에 따라 다른 주소를 넣어주기 위해 endpoints 설정
+  // searchQuery prop이 있으면 검색 API를, 없으면 기존 카테고리 API를 사용
   const getApiEndpoint = () => {
-    const path = location.pathname.split("/").pop(); //url의 마지막 부분을 가져옴 /movie/popular이면 popular을 가져옴
+    if (searchQuery) {
+      return `/search/movie?query=${encodeURIComponent(
+        searchQuery
+      )}&language=ko-KR&page=1`;
+    }
+
+    const path = location.pathname.split("/").pop();
     const endpoints = {
-      "now-playing": "/movie/now_playing", // 하이픈 있어서 따옴표 필요
-      popular: "/movie/popular", //하이픈 없기 때문에 따옴표 x
+      "now-playing": "/movie/now_playing",
+      popular: "/movie/popular",
       "top-rated": "/movie/top_rated",
       "up-coming": "/movie/upcoming",
     };
-    return endpoints[path] || "/movie/now_playing"; //일치하는 것이 없으면 now_playing이 default
+    return `${endpoints[path] || "/movie/now_playing"}?language=ko-KR&page=1`;
   };
 
-  //영화 목록 데이터
   const {
     data: movieData,
     isLoading,
     isError,
-  } = useCustomFetch(`${getApiEndpoint()}?language=ko-KR&page=1`);
+  } = useCustomFetch(getApiEndpoint());
 
-  //영화 클릭 시 해당 영화 id를 이용해 상세 페이지로 이동
   const handleMovieClick = (movieId) => {
     navigate(`/movies/${movieId}`);
   };
 
-  //로딩
+  // 스켈레톤 UI 렌더링
+  const renderSkeletons = () => {
+    return (
+      <S.Container>
+        {Array(8)
+          .fill(null)
+          .map((_, index) => (
+            <S.Item key={index}>
+              <S.PosterContainer>
+                <S.SkeletonPoster />
+              </S.PosterContainer>
+              <S.MovieInfo>
+                <S.SkeletonText />
+                <S.SkeletonText width="60%" />
+              </S.MovieInfo>
+            </S.Item>
+          ))}
+      </S.Container>
+    );
+  };
+
+  if (isLoading) {
+    return renderSkeletons();
+  }
+
   if (isLoading) {
     return (
       <div>
@@ -39,7 +67,6 @@ const Grid = () => {
     );
   }
 
-  //에러
   if (isError) {
     return (
       <div>
@@ -48,7 +75,6 @@ const Grid = () => {
     );
   }
 
-  //데이터 없는 경우
   if (!movieData?.results) {
     return (
       <div>
@@ -57,9 +83,19 @@ const Grid = () => {
     );
   }
 
+  // 검색 결과가 없는 경우
+  if (searchQuery && movieData.results.length === 0) {
+    return (
+      <div>
+        <h1 style={{ color: "white" }}>
+          검색하신 "{searchQuery}" 영화를 찾을 수 없습니다
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <S.Container>
-      {/* data.results로 가져와 줌 -> 페이지마다 배열형식 results로 값이 들어오기 때문 */}
       {movieData.results.map((movie) => (
         <S.Item
           key={movie.id}
