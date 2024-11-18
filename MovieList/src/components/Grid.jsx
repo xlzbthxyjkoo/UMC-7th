@@ -1,34 +1,28 @@
 import * as S from "../styles/GridStyle";
-import useCustomFetch from "../hooks/useCustomFetch";
+// import useCustomFetch from "../hooks/useCustomFetch";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMovieQueries } from "../hooks/useMovieQueries";
 
 const Grid = ({ searchQuery }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // searchQuery prop이 있으면 검색 API를, 없으면 기존 카테고리 API를 사용
-  const getApiEndpoint = () => {
+  const getQueryHook = () => {
     if (searchQuery) {
-      return `/search/movie?query=${encodeURIComponent(
-        searchQuery
-      )}&language=ko-KR&page=1`;
+      return useMovieQueries.useSearchMovies(searchQuery);
     }
 
     const path = location.pathname.split("/").pop();
-    const endpoints = {
-      "now-playing": "/movie/now_playing",
-      popular: "/movie/popular",
-      "top-rated": "/movie/top_rated",
-      "up-coming": "/movie/upcoming",
+    const queryHooks = {
+      "now-playing": useMovieQueries.useNowPlaying,
+      popular: useMovieQueries.usePopular,
+      "top-rated": useMovieQueries.useTopRated,
+      "up-coming": useMovieQueries.useUpcoming,
     };
-    return `${endpoints[path] || "/movie/now_playing"}?language=ko-KR&page=1`;
+    return queryHooks[path]?.() || useMovieQueries.useNowPlaying();
   };
 
-  const {
-    data: movieData,
-    isLoading,
-    isError,
-  } = useCustomFetch(getApiEndpoint());
+  const { data: movieData, isLoading, isError } = getQueryHook();
 
   const handleMovieClick = (movieId) => {
     navigate(`/movies/${movieId}`);

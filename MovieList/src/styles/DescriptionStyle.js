@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const DetailContainer = styled.div`
   min-height: 100vh;
@@ -117,4 +117,64 @@ export const ErrorMessage = styled.div`
   font-size: 1.5rem;
   text-align: center;
   padding: 40px;
+`;
+
+export const SkeletonPoster = styled.div`
+  width: 100%;
+  height: 450px;
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+`;
+
+export const SkeletonTitle = styled.div`
+  width: 60%;
+  height: 36px;
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 16px;
+`;
+
+export const SkeletonText = styled.div`
+  width: ${(props) => props.width || "100px"};
+  height: 20px;
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin: 8px 0;
+`;
+
+export const SkeletonOverview = styled.div`
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin: 16px 0;
+`;
+
+export const SkeletonCastImage = styled.div`
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+`;
+
+// 애니메이션 keyframes 추가
+export const keyframes = css`
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
 `;

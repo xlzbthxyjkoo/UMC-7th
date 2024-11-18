@@ -2,11 +2,14 @@ import { useState } from "react";
 import { authApi } from "../apis/authApi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { queryKeys } from "./queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { setUser } = useAuth();
 
   const login = async (userData) => {
@@ -14,16 +17,15 @@ export const useLogin = () => {
       setIsLoading(true);
       setError(null);
 
-      // 로그인
       await authApi.login(userData);
 
-      // 유저 정보 가져오기
-      const userInfo = await authApi.getMe();
+      // 로그인 성공 후 즉시 사용자 정보 가져오기
+      // fetchQuery를 사용하여 캐시를 즉시 업데이트하고 UI를 리프레시
+      await queryClient.fetchQuery({
+        queryKey: queryKeys.user.me(),
+        queryFn: authApi.getMe,
+      });
 
-      // Context 업데이트
-      setUser(userInfo);
-
-      // 메인 페이지로 이동
       navigate("/");
     } catch (err) {
       setError(

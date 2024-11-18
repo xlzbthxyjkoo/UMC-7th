@@ -1,30 +1,62 @@
 import { useParams } from "react-router-dom";
-import useCustomFetch from "../hooks/useCustomFetch";
+// import useCustomFetch from "../hooks/useCustomFetch";
+import { useMovieQueries } from "../hooks/useMovieQueries";
 import * as S from "../styles/DescriptionStyle";
 
 const Description = () => {
   const { movieId } = useParams();
 
-  //영화 세부 정보 데이터
   const {
     data: movieDetails,
     isLoading: isLoadingDetails,
     isError: isErrorDetails,
-  } = useCustomFetch(`/movie/${movieId}?language=ko-KR`);
+  } = useMovieQueries.useMovieDetails(movieId);
 
-  //제작진 정보 데이터
   const {
     data: credits,
     isLoading: isLoadingCredits,
     isError: isErrorCredits,
-  } = useCustomFetch(`/movie/${movieId}/credits?language=ko-KR`);
+  } = useMovieQueries.useMovieCredits(movieId);
 
-  //로딩
+  const renderSkeleton = () => {
+    return (
+      <S.DetailContainer>
+        <S.ContentWrapper>
+          <S.PosterSection>
+            <S.SkeletonPoster />
+          </S.PosterSection>
+          <S.InfoSection>
+            <S.SkeletonTitle />
+            <S.SubInfo>
+              <S.SkeletonText width="100px" />
+              <S.SkeletonText width="100px" />
+              <S.SkeletonText width="100px" />
+            </S.SubInfo>
+            <S.SkeletonOverview />
+            <S.CreditsSection>
+              <S.CreditsTitle>감독/출연</S.CreditsTitle>
+              <S.CastGrid>
+                {Array(6)
+                  .fill(null)
+                  .map((_, index) => (
+                    <S.CastCard key={index}>
+                      <S.SkeletonCastImage />
+                      <S.SkeletonText width="80px" />
+                      <S.SkeletonText width="60px" />
+                    </S.CastCard>
+                  ))}
+              </S.CastGrid>
+            </S.CreditsSection>
+          </S.InfoSection>
+        </S.ContentWrapper>
+      </S.DetailContainer>
+    );
+  };
+
   if (isLoadingDetails || isLoadingCredits) {
-    return <S.LoadingMessage>로딩 중입니다...</S.LoadingMessage>;
+    return renderSkeleton();
   }
 
-  //에러
   if (isErrorDetails || isErrorCredits || !movieDetails || !credits) {
     return <S.ErrorMessage>에러가 발생했습니다.</S.ErrorMessage>;
   }
