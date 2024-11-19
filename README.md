@@ -6,4 +6,5 @@
 |3주차|영화 사이트 제작|MovieList|
 |4주차|영화 상세페이지|MovieList|
 |5주차|로그인, 회원가입|MovieList|
-|6주차|Context API, |2W_ToDoList, MovieList|
+|6주차|Context API, API 연동, QueryParameter 활용 검색 기능 구현 |2W_ToDoList, MovieList|
+|7주차|useQuery, useInfiniteQuery, Pagination |MovieList|
