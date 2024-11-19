@@ -1,15 +1,17 @@
 import { axiosInstance } from "./axios-instance";
 
 export const movieApi = {
-  getNowPlaying: () =>
-    axiosInstance.get("/movie/now_playing?language=ko-KR&page=1"),
+  getNowPlaying: ({ pageParam = 1 }) =>
+    axiosInstance.get(`/movie/now_playing?language=ko-KR&page=${pageParam}`),
 
-  getPopular: () => axiosInstance.get("/movie/popular?language=ko-KR&page=1"),
+  getPopular: ({ pageParam = 1 }) =>
+    axiosInstance.get(`/movie/popular?language=ko-KR&page=${pageParam}`),
 
-  getTopRated: () =>
-    axiosInstance.get("/movie/top_rated?language=ko-KR&page=1"),
+  getTopRated: ({ pageParam = 1 }) =>
+    axiosInstance.get(`/movie/top_rated?language=ko-KR&page=${pageParam}`),
 
-  getUpcoming: () => axiosInstance.get("/movie/upcoming?language=ko-KR&page=1"),
+  getUpcoming: ({ pageParam = 1 }) =>
+    axiosInstance.get(`/movie/upcoming?language=ko-KR&page=${pageParam}`),
 
   getMovieDetails: (movieId) =>
     axiosInstance.get(`/movie/${movieId}?language=ko-KR`),

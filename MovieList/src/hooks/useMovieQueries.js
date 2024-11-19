@@ -1,33 +1,64 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { movieApi } from "../apis/movieApi";
 import { queryKeys } from "./queryKeys";
 
 export const useMovieQueries = {
-  useNowPlaying: () => {
-    return useQuery({
-      queryKey: queryKeys.movies.nowPlaying(),
-      queryFn: () => movieApi.getNowPlaying().then((res) => res.data),
+  useInfiniteNowPlaying: () => {
+    return useInfiniteQuery({
+      queryKey: queryKeys.movies.infinite.nowPlaying(),
+      queryFn: movieApi.getNowPlaying,
+      getNextPageParam: (lastPage) => {
+        // TMDB API는 total_pages를 제공
+        if (lastPage.data.page < lastPage.data.total_pages) {
+          return lastPage.data.page + 1;
+        }
+        return undefined;
+      },
     });
   },
 
-  usePopular: () => {
-    return useQuery({
-      queryKey: queryKeys.movies.popular(),
-      queryFn: () => movieApi.getPopular().then((res) => res.data),
+  //무한 스크롤 데이터 가져오도록
+  useInfinitePopular: () => {
+    return useInfiniteQuery({
+      queryKey: queryKeys.movies.infinite.popular(),
+      // API 호출 함수 - pageParam은 useInfiniteQuery가 자동으로 관리
+      queryFn: movieApi.getPopular,
+      // 다음 페이지 존재 여부를 결정하는 함수
+      getNextPageParam: (lastPage) => {
+        // TMDB API는 total_pages 정보를 제공
+        // 현재 페이지가 전체 페이지보다 작으면 다음 페이지 번호 반환
+        if (lastPage.data.page < lastPage.data.total_pages) {
+          return lastPage.data.page + 1;
+        }
+        // 다음 페이지가 없으면 undefined 반환 (무한 스크롤 중단)
+        return undefined;
+      },
     });
   },
 
-  useTopRated: () => {
-    return useQuery({
-      queryKey: queryKeys.movies.topRated(),
-      queryFn: () => movieApi.getTopRated().then((res) => res.data),
+  useInfiniteTopRated: () => {
+    return useInfiniteQuery({
+      queryKey: queryKeys.movies.infinite.topRated(),
+      queryFn: movieApi.getTopRated,
+      getNextPageParam: (lastPage) => {
+        if (lastPage.data.page < lastPage.data.total_pages) {
+          return lastPage.data.page + 1;
+        }
+        return undefined;
+      },
     });
   },
 
-  useUpcoming: () => {
-    return useQuery({
-      queryKey: queryKeys.movies.upcoming(),
-      queryFn: () => movieApi.getUpcoming().then((res) => res.data),
+  useInfiniteUpcoming: () => {
+    return useInfiniteQuery({
+      queryKey: queryKeys.movies.infinite.upcoming(),
+      queryFn: movieApi.getUpcoming,
+      getNextPageParam: (lastPage) => {
+        if (lastPage.data.page < lastPage.data.total_pages) {
+          return lastPage.data.page + 1;
+        }
+        return undefined;
+      },
     });
   },
 
