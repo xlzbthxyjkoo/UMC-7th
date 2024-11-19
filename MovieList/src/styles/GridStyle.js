@@ -16,9 +16,18 @@ export const Container = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 2rem;
   width: 100%;
-  max-width: 1600px; // 더 넓게 조정
+  max-width: 1600px;
   margin: 0 auto;
   padding: 1rem;
+  min-height: calc(100vh - 140px); // 페이지네이션을 위한 여백 확보
+`;
+
+export const GridWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 60px; // 페이지네이션을 위한 하단 여백
 `;
 
 export const Item = styled.div`

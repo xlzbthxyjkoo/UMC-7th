@@ -3,17 +3,13 @@ import { movieApi } from "../apis/movieApi";
 import { queryKeys } from "./queryKeys";
 
 export const useMovieQueries = {
-  useInfiniteNowPlaying: () => {
-    return useInfiniteQuery({
-      queryKey: queryKeys.movies.infinite.nowPlaying(),
-      queryFn: movieApi.getNowPlaying,
-      getNextPageParam: (lastPage) => {
-        // TMDB API는 total_pages를 제공
-        if (lastPage.data.page < lastPage.data.total_pages) {
-          return lastPage.data.page + 1;
-        }
-        return undefined;
-      },
+  // 페이지네이션용 now-playing 쿼리 훅
+  useNowPlayingPagination: (page = 1) => {
+    return useQuery({
+      queryKey: queryKeys.movies.nowPlaying(page),
+      queryFn: () => movieApi.getNowPlaying({ page }),
+      keepPreviousData: true, // 페이지 전환시 이전 데이터 유지
+      staleTime: 1000 * 60 * 5, // 5분
     });
   },
 
@@ -78,10 +74,18 @@ export const useMovieQueries = {
     });
   },
   useSearchMovies: (query) => {
-    return useQuery({
+    return useInfiniteQuery({
+      // useQuery -> useInfiniteQuery로 변경
       queryKey: queryKeys.movies.search(query),
-      queryFn: () => movieApi.searchMovies(query).then((res) => res.data),
-      enabled: !!query, // 검색어가 있을 때만 실행
+      queryFn: ({ pageParam = 1 }) =>
+        movieApi.searchMovies({ query, page: pageParam }),
+      getNextPageParam: (lastPage) => {
+        if (lastPage.data.page < lastPage.data.total_pages) {
+          return lastPage.data.page + 1;
+        }
+        return undefined;
+      },
+      enabled: !!query,
     });
   },
 };

@@ -1,15 +1,21 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import * as S from "../styles/GridStyle";
 // import useCustomFetch from "../hooks/useCustomFetch";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMovieQueries } from "../hooks/useMovieQueries";
 import LoadingSpinner from "./LoadingSpinner";
+import { Pagination } from "./Pagination";
 
 const Grid = ({ searchQuery }) => {
+  const [page, setPage] = useState(1);
   const location = useLocation();
   const navigate = useNavigate();
   // Intersection Observer를 위한 ref
   const observerRef = useRef();
+  const path = location.pathname.split("/").pop();
+
+  // now-playing 페이지일 때는 페이지네이션, 나머지는 무한 스크롤
+  const isNowPlaying = path === "now-playing";
 
   // URL 경로에 따라 적절한 무한 스크롤 훅을 선택
   const getQueryHook = () => {
@@ -17,16 +23,17 @@ const Grid = ({ searchQuery }) => {
       return useMovieQueries.useSearchMovies(searchQuery);
     }
 
-    const path = location.pathname.split("/").pop();
-    // 각 경로별 해당하는 쿼리 훅 매핑
+    // now-playing은 페이지네이션, 나머지는 무한 스크롤
+    if (isNowPlaying) {
+      return useMovieQueries.useNowPlayingPagination(page);
+    }
+
     const queryHooks = {
-      "now-playing": useMovieQueries.useInfiniteNowPlaying,
       popular: useMovieQueries.useInfinitePopular,
       "top-rated": useMovieQueries.useInfiniteTopRated,
       "up-coming": useMovieQueries.useInfiniteUpcoming,
     };
-    // 매핑된 훅이 없으면 기본값으로 현재 상영작 사용
-    return queryHooks[path]?.() || useMovieQueries.useInfiniteNowPlaying();
+    return queryHooks[path]?.() || useMovieQueries.useInfinitePopular();
   };
 
   // useInfiniteQuery의 반환값들
@@ -46,7 +53,7 @@ const Grid = ({ searchQuery }) => {
   // Intersection Observer 설정
   const lastMovieRef = useCallback(
     (node) => {
-      if (isLoading) return;
+      if (isLoading || isNowPlaying) return; // now-playing이면 observer 사용 안 함
 
       // 이전 observer 정리
       if (observerRef.current) observerRef.current.disconnect();
@@ -65,11 +72,10 @@ const Grid = ({ searchQuery }) => {
     [isLoading, hasNextPage, fetchNextPage]
   );
 
-  if (isLoading) {
-    return renderSkeletons();
-  }
-  if (isError) return <div>에러가 발생했습니다.</div>;
-  if (!data) return <div>데이터가 없습니다.</div>;
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo(0, 0);
+  };
 
   // 스켈레톤 UI 렌더링
   const renderSkeletons = () => {
@@ -92,8 +98,14 @@ const Grid = ({ searchQuery }) => {
     );
   };
 
+  if (isLoading) {
+    return renderSkeletons();
+  }
+  if (isError) return <div>에러가 발생했습니다.</div>;
+  if (!data) return <div>데이터가 없습니다.</div>;
+
   // 검색 결과가 없는 경우
-  if (searchQuery && movieData.results.length === 0) {
+  if (searchQuery && data?.pages[0]?.data.results.length === 0) {
     return (
       <div>
         <h1 style={{ color: "white" }}>
@@ -104,36 +116,70 @@ const Grid = ({ searchQuery }) => {
   }
 
   return (
-    <>
+    <S.GridWrapper>
       <S.Container>
-        {/* 모든 페이지의 영화들을 순회하며 렌더링 */}
-        {data.pages.map((page) =>
-          page.data.results.map((movie, index) => (
-            <S.Item
-              key={movie.id}
-              // 각 페이지의 마지막 아이템에 ref 설정
-              ref={index === page.data.results.length - 1 ? lastMovieRef : null}
-              onClick={() => navigate(`/movies/${movie.id}`)}
-            >
-              <S.PosterContainer>
-                <S.Poster
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                />
-                <S.Overlay />
-              </S.PosterContainer>
-              <S.MovieInfo>
-                <S.MovieTitle>{movie.title}</S.MovieTitle>
-                <S.MovieReleaseDate>
-                  {new Date(movie.release_date).toLocaleDateString()}
-                </S.MovieReleaseDate>
-              </S.MovieInfo>
-            </S.Item>
-          ))
-        )}
+        {isNowPlaying
+          ? // 페이지네이션 뷰
+            data?.data?.results.map((movie) => (
+              <S.Item
+                key={movie.id}
+                onClick={() => navigate(`/movies/${movie.id}`)}
+              >
+                <S.PosterContainer>
+                  <S.Poster
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                  />
+                  <S.Overlay />
+                </S.PosterContainer>
+                <S.MovieInfo>
+                  <S.MovieTitle>{movie.title}</S.MovieTitle>
+                  <S.MovieReleaseDate>
+                    {new Date(movie.release_date).toLocaleDateString()}
+                  </S.MovieReleaseDate>
+                </S.MovieInfo>
+              </S.Item>
+            ))
+          : // 무한 스크롤 뷰
+            data?.pages?.map((page) =>
+              page.data.results.map((movie, index) => (
+                <S.Item
+                  key={movie.id}
+                  ref={
+                    index === page.data.results.length - 1 ? lastMovieRef : null
+                  }
+                  onClick={() => navigate(`/movies/${movie.id}`)}
+                >
+                  <S.PosterContainer>
+                    <S.Poster
+                      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                      alt={movie.title}
+                    />
+                    <S.Overlay />
+                  </S.PosterContainer>
+                  <S.MovieInfo>
+                    <S.MovieTitle>{movie.title}</S.MovieTitle>
+                    <S.MovieReleaseDate>
+                      {new Date(movie.release_date).toLocaleDateString()}
+                    </S.MovieReleaseDate>
+                  </S.MovieInfo>
+                </S.Item>
+              ))
+            )}
       </S.Container>
-      {isFetchingNextPage && <LoadingSpinner />}
-    </>
+
+      {/* now-playing일 때만 페이지네이션 표시 */}
+      {isNowPlaying && data?.data && (
+        <Pagination
+          currentPage={page}
+          totalPages={data.data.total_pages}
+          onPageChange={handlePageChange}
+        />
+      )}
+
+      {/* 무한 스크롤 로딩 스피너 */}
+      {!isNowPlaying && isFetchingNextPage && <LoadingSpinner />}
+    </S.GridWrapper>
   );
 };
 

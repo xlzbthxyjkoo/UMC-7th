@@ -1,8 +1,8 @@
 import { axiosInstance } from "./axios-instance";
 
 export const movieApi = {
-  getNowPlaying: ({ pageParam = 1 }) =>
-    axiosInstance.get(`/movie/now_playing?language=ko-KR&page=${pageParam}`),
+  getNowPlaying: ({ page = 1 }) =>
+    axiosInstance.get(`/movie/now_playing?language=ko-KR&page=${page}`),
 
   getPopular: ({ pageParam = 1 }) =>
     axiosInstance.get(`/movie/popular?language=ko-KR&page=${pageParam}`),
@@ -19,8 +19,12 @@ export const movieApi = {
   getMovieCredits: (movieId) =>
     axiosInstance.get(`/movie/${movieId}/credits?language=ko-KR`),
 
-  searchMovies: (query) =>
+  searchMovies: (
+    { query, page = 1 } // 페이지 파라미터 추가
+  ) =>
     axiosInstance.get(
-      `/search/movie?query=${encodeURIComponent(query)}&language=ko-KR&page=1`
+      `/search/movie?query=${encodeURIComponent(
+        query
+      )}&language=ko-KR&page=${page}`
     ),
 };
