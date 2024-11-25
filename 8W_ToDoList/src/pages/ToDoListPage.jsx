@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useDebounce } from "../hooks/useDebounce";
 import { useTodo } from "../hooks/useTodo";
 import TodoList from "../components/todo/TodoList";
-import { useDebounce } from "../hooks/useDebounce";
 import * as S from "../styles/TodoStyle";
 import { FiSearch } from "react-icons/fi";
 
@@ -11,22 +11,9 @@ const TodoListPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const { todos, loading, error, addTodo, updateTodo, deleteTodo, fetchTodos } =
-    useTodo();
+  const { todos, loading, error, addTodo, updateTodo, deleteTodo } =
+    useTodo(debouncedSearchTerm);
 
-  // 검색어가 변경될 때마다 Todo 목록을 다시 불러옴
-  useEffect(() => {
-    const search = async () => {
-      try {
-        await fetchTodos(debouncedSearchTerm);
-      } catch (err) {
-        console.error("검색 실패:", err);
-      }
-    };
-    search();
-  }, [debouncedSearchTerm, fetchTodos]);
-
-  // Todo 추가 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) {

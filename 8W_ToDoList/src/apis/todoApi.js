@@ -40,7 +40,7 @@ export const todoApi = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(todoData), // 필요한 필드만 전송
+      body: JSON.stringify(todoData),
     });
     if (!response.ok) throw new Error("할 일 수정에 실패했습니다.");
     return response.text();

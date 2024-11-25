@@ -1,78 +1,56 @@
-import { useState, useEffect, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { todoApi } from "../apis/todoApi";
 
-export const useTodo = () => {
-  const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+export const useTodo = (searchTitle = "") => {
+  const queryClient = useQueryClient();
 
-  //목록 조회
-  const fetchTodos = useCallback(async (searchTitle = "") => {
-    setLoading(true);
-    try {
-      const data = await todoApi.getTodos(searchTitle);
-      setTodos(data);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-      setTodos([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const {
+    data: todos = [],
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["todos", searchTitle],
+    queryFn: () => todoApi.getTodos(searchTitle),
+  });
 
-  //추가
+  // Mutations
+  const addTodoMutation = useMutation({
+    mutationFn: todoApi.createTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
+  const updateTodoMutation = useMutation({
+    mutationFn: ({ id, todoData }) => todoApi.updateTodo(id, todoData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
+  const deleteTodoMutation = useMutation({
+    mutationFn: todoApi.deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
   const addTodo = async (todoData) => {
-    setLoading(true);
-    try {
-      await todoApi.createTodo(todoData);
-      await fetchTodos(); // 목록 새로고침
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    await addTodoMutation.mutateAsync(todoData);
   };
 
-  //수정
   const updateTodo = async (id, todoData) => {
-    setLoading(true);
-    try {
-      await todoApi.updateTodo(id, todoData);
-      await fetchTodos();
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    await updateTodoMutation.mutateAsync({ id, todoData });
   };
 
-  //삭제
   const deleteTodo = async (id) => {
-    setLoading(true);
-    try {
-      await todoApi.deleteTodo(id);
-      await fetchTodos();
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    await deleteTodoMutation.mutateAsync(id);
   };
-
-  //데이터 로드
-  useEffect(() => {
-    fetchTodos();
-  }, [fetchTodos]);
 
   return {
     todos,
     loading,
-    error,
-    fetchTodos,
+    error: error?.message,
     addTodo,
     updateTodo,
     deleteTodo,

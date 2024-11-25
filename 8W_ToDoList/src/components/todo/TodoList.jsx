@@ -12,9 +12,9 @@ const TodoList = ({ todos, onUpdate, onDelete, disabled }) => {
     return null;
   }
 
-  const handleCheckChange = (e, todo) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-    onUpdate(todo.id, { ...todo, checked: e.target.checked });
+  const handleCheckboxClick = (e, todo) => {
+    e.stopPropagation(); // 상세보기로 가는 것을 방지
+    onUpdate(todo.id, { ...todo, checked: !todo.checked });
   };
 
   const handleEdit = (e, todo) => {
@@ -44,10 +44,8 @@ const TodoList = ({ todos, onUpdate, onDelete, disabled }) => {
     setEditTitle("");
     setEditContent("");
   };
-
-  const handleClick = (id) => {
+  const handleTodoClick = (id) => {
     if (!editingId) {
-      // 수정 모드가 아닐 때만 상세 페이지로 이동
       navigate(`/todo/${id}`);
     }
   };
@@ -57,13 +55,13 @@ const TodoList = ({ todos, onUpdate, onDelete, disabled }) => {
       {todos.map((todo) => (
         <S.TodoItemContainer
           key={todo.id}
-          onClick={() => handleClick(todo.id)}
+          onClick={() => handleTodoClick(todo.id)}
           style={{ cursor: editingId ? "default" : "pointer" }}
         >
-          <S.CheckboxContainer>
+          <S.CheckboxContainer onClick={(e) => e.stopPropagation()}>
             <S.Checkbox
               checked={todo.checked}
-              onChange={(e) => handleCheckChange(e, todo)}
+              onChange={(e) => handleCheckboxClick(e, todo)}
               disabled={disabled}
             />
           </S.CheckboxContainer>
