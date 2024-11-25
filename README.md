@@ -8,3 +8,4 @@
 |5주차|로그인, 회원가입|MovieList|
 |6주차|Context API, API 연동, QueryParameter 활용 검색 기능 구현 |2W_ToDoList, MovieList|
 |7주차|useQuery, useInfiniteQuery, Pagination |MovieList|
+|8주차|ToDo List 구현 (useEffect 활용, Tanstack-Query) |8W_ToDoList|
