@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 // import useCustomFetch from "../hooks/useCustomFetch";
 import { useMovieQueries } from "../hooks/useMovieQueries";
 import * as S from "../styles/DescriptionStyle";
+import MovieReview from "../components/MovieReview";
 
 const Description = () => {
   const { movieId } = useParams();
@@ -127,6 +128,7 @@ const Description = () => {
           </S.CreditsSection>
         </S.InfoSection>
       </S.ContentWrapper>
+      <MovieReview />
     </S.DetailContainer>
   );
 };
