@@ -70,6 +70,7 @@ export const Overview = styled.p`
 
 export const CreditsSection = styled.div`
   margin-top: 40px;
+  position: relative;
 `;
 
 export const CreditsTitle = styled.h2`
@@ -177,4 +178,28 @@ export const keyframes = css`
       background-position: -200% 0;
     }
   }
+`;
+
+export const MoreButton = styled.button`
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const NoProfileImage = styled.div`
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #333;
+  margin: 0 auto 10px;
 `;

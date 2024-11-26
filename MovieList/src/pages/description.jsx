@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 // import useCustomFetch from "../hooks/useCustomFetch";
 import { useMovieQueries } from "../hooks/useMovieQueries";
 import * as S from "../styles/DescriptionStyle";
 
 const Description = () => {
   const { movieId } = useParams();
+  const navigate = useNavigate();
 
   const {
     data: movieDetails,
@@ -101,15 +102,22 @@ const Description = () => {
 
           <S.CreditsSection>
             <S.CreditsTitle>감독/출연</S.CreditsTitle>
+            <S.MoreButton
+              onClick={() => navigate(`/movies/${movieId}/credits`)}
+            >
+              더보기 ({credits?.cast?.length}명)
+            </S.MoreButton>
             <S.CastGrid>
               {/* 상위 10명의 출연진 정보만 잘라서 보여줌 */}
               {credits.cast?.slice(0, 10).map((person) => (
                 <S.CastCard key={person.id}>
-                  {person.profile_path && (
+                  {person.profile_path ? (
                     <S.CastImage
                       src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
                       alt={person.name}
                     />
+                  ) : (
+                    <S.NoProfileImage />
                   )}
                   <S.CastName>{person.name}</S.CastName>
                   <S.CharacterName>{person.character}</S.CharacterName>

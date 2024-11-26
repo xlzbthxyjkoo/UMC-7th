@@ -12,6 +12,7 @@ import LoginPage from "./pages/login.jsx";
 import SignupPage from "./pages/signup.jsx";
 import SearchPage from "./pages/search.jsx";
 import Description from "./pages/description.jsx";
+import MovieCredits from "./components/MovieCredits.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
         children: [
           { path: "category/:category", element: <Grid /> },
           { path: ":movieId", element: <Description /> },
+          { path: ":movieId/credits", element: <MovieCredits /> },
         ],
       },
       {
