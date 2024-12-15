@@ -1,4 +1,3 @@
-import axios from "axios";
 import { api } from "./axios";
 import { setToken, clearTokens, TOKEN_TYPE } from "../utils/tokenUtils";
 
